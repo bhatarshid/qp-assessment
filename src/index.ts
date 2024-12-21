@@ -1,13 +1,22 @@
-import express, { Request, Response } from 'express';
-import prisma from '../lib/db.js';
+import prisma from '../lib/db.ts';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import router from './routes/index.ts';
+
+dotenv.config();
+const PORT = process.env.PORT || 3000;
 
 const app = express();
-const port = process.env.PORT || 3000;
 
+app.use(cors());
+app.use(bodyParser.json({limit:'25mb'}));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use('/api', router());
 
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(PORT, async () => {
+  console.log("User-service is litening on port: ", PORT);
 });
