@@ -9,3 +9,8 @@ export type UpdateItem = {
   quantity?: number;
   price?: number;
 }
+
+export type User = {
+  name: string;
+  email: string;
+}
