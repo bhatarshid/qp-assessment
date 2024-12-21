@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ES2015",
+    "moduleResolution": "bundler",
     "target": "ES2022",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
