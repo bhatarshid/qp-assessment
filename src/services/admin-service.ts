@@ -1,7 +1,7 @@
 import prisma from "../../lib/db.ts";
 import { Item, UpdateItem } from "../../lib/schema.ts";
 
-const addGroceryItem = async (items: Item): Promise<String> => {
+const addGroceryItem = async (items: Item): Promise<string> => {
   try {
     await prisma.groceryItem.create({
       data: {
@@ -20,7 +20,7 @@ const addGroceryItem = async (items: Item): Promise<String> => {
 
 const viewGroceryItems = async (): Promise<Item[]> => {
   try {
-    const items = await prisma.groceryItem.findMany();
+    const items: Item[] = await prisma.groceryItem.findMany();
     return items;
   }
   catch (error) {
@@ -28,12 +28,20 @@ const viewGroceryItems = async (): Promise<Item[]> => {
   }
 }
 
-const deleteGroceryItem = async (id: string): Promise<String> => {
+const deleteGroceryItem = async (id: string): Promise<string> => {
   try {
-    await prisma.groceryItem.delete({
-      where: {
-        id: Number(id)
-      }
+    await prisma.$transaction(async (prisma) => {
+      await prisma.userGroceryItem.deleteMany({
+        where: {
+          groceryItemId: Number(id),
+        },
+      });
+
+      await prisma.groceryItem.delete({
+        where: {
+          id: Number(id),
+        },
+      });
     });
 
     return 'Grocery item deleted successfully!';
@@ -43,7 +51,7 @@ const deleteGroceryItem = async (id: string): Promise<String> => {
   }
 }
 
-const updateGroceryItem = async (id: string, items: UpdateItem): Promise<String> => {
+const updateGroceryItem = async (id: string, items: UpdateItem): Promise<string> => {
   try {
     const item: Item = await prisma.groceryItem.findUnique({
       where: {
@@ -72,9 +80,43 @@ const updateGroceryItem = async (id: string, items: UpdateItem): Promise<String>
   }
 }
 
+const addQuantityToItem = async (id: number, quantity: number, type: string): Promise<string> => {
+  try {
+    const item: Item = await prisma.groceryItem.findUnique({
+      where: {
+        id: Number(id)
+      }
+    });
+    if (!item) {
+      throw { statusCode: 404, message: 'Grocery item not found!' };
+    }
+
+    if(type === 'remove') {
+      if(item.quantity - quantity < 0) {
+        throw { statusCode: 400, message: 'Insufficient quantity!' };
+      }
+    }
+
+    await prisma.groceryItem.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        quantity: type === 'add' ? item.quantity + quantity : item.quantity - quantity
+      }
+    });
+
+    return 'Inventory level updated successfully!';
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 export default {
   addGroceryItem,
   viewGroceryItems,
   deleteGroceryItem,
-  updateGroceryItem
+  updateGroceryItem,
+  addQuantityToItem
 }

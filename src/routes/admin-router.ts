@@ -7,4 +7,5 @@ export default (router: Router) => {
   router.get('/admin/item', adminController.getGroceryItems);
   router.delete('/admin/item/:id', adminController.deleteGroceryItem);
   router.put('/admin/item', adminController.updateGroceryItem);
+  router.put('/admin/item/:id/quantity/:count', adminController.addQuantityToItem);
 }

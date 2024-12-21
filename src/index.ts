@@ -18,5 +18,5 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', router());
 
 app.listen(PORT, async () => {
-  console.log("User-service is litening on port: ", PORT);
+  console.log("App is litening on port: ", PORT);
 });

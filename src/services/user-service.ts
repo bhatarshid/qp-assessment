@@ -55,7 +55,7 @@ const bookGroceryItems = async (id: string, items: { id: number; count: number}[
         }
       });
       if (!groceryItem) {
-        throw { statusCode: 404, message: `Grocery item ${groceryItem} not found!` };
+        throw { statusCode: 404, message: `Grocery item ${item.id} not found!` };
       }
       if (groceryItem.quantity < item.count) {
         throw { statusCode: 400, message: 'Not enough quantity available for ' + groceryItem.name };
