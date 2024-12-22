@@ -70,6 +70,10 @@ Create a `.env` file in the root directory and add the following environment var
        ```
 The application will be running on `http://localhost:3000`.
 
+### Postman Collection.
+You can find the Postman collection [here](https://github.com/bhatarshid/qp-assessment/blob/main/collection/qp-assessment.postman_collection.json)
+To use the collection, import it into your Postman.
+
 ### Using Docker
 To run the application using Docker, use the provided `Dockerfile`.
 
